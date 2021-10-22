@@ -2,7 +2,8 @@
 
 Servo gripper;
 
-int x = 90;
+// 
+int gripper_speed = 90;
 
 void setup()
 {
@@ -12,16 +13,24 @@ void setup()
 	gripper.attach(9);
 }
 
+
 void loop()
 {
+	// Force loop to wait for Serial string input.
 	while (!Serial.available());
-	x = 90;
-	x = Serial.readString().toInt();
+	
+	// Initialize servo speed to 0 (90 ms is the command pulse).
+	gripper_speed = 90;
+	// Read the serial string input and parse it to integer.
+	gripper_speed = Serial.readString().toInt();
 
-	x = map(x, -100, 100, 0, 180);
+	// Map the input integer to a range between 0 and 180.
+	// The integer input originally ranges from -100 to 100.
+	gripper_speed = map(gripper_speed, -100, 100, 0, 180);
 
+	// Millisecond delay to prevent timeout
 	delay(5);
-	Serial.print(x);
+	Serial.print(gripper_speed);
 
-	gripper.write(x);
+	gripper.write(gripper_speed);
 }
